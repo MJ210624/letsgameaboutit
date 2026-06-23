@@ -10,7 +10,8 @@ async function searchGames(searchTerm) {
       {
         params: {
           key: process.env.RAWG_API_KEY,
-          search: searchTerm
+          search: searchTerm,
+          page_size: 5
         }
       }
     );
