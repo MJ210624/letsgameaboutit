@@ -1,0 +1,106 @@
+<nav class="sticky top-0 z-50 bg-[#090D18]/90 backdrop-blur border-b border-zinc-800">
+
+  <div class="max-w-7xl mx-auto px-8">
+
+    <div class="h-20 flex items-center justify-between">
+
+      <!-- Logo -->
+
+      <a href="/" class="flex items-center gap-3">
+
+        <div
+          class="w-11 h-11 rounded-xl bg-gradient-to-br from-violet-600 to-blue-500 flex items-center justify-center text-xl"
+        >
+          🎮
+        </div>
+
+        <div>
+
+          <h1 class="font-bold text-lg tracking-wide">
+            LET'S GAME
+          </h1>
+
+          <p class="text-xs text-zinc-500">
+            ABOUT IT
+          </p>
+
+        </div>
+
+      </a>
+
+      <!-- Menu -->
+
+      <div class="flex items-center gap-8">
+
+        <a
+          href="/"
+          class="text-zinc-300 hover:text-violet-400 transition"
+        >
+          Home
+        </a>
+
+        <a
+          href="/games"
+          class="text-zinc-300 hover:text-violet-400 transition"
+        >
+          Jogos
+        </a>
+
+        <a
+          href="/reviews"
+          class="text-zinc-300 hover:text-violet-400 transition"
+        >
+          Reviews
+        </a>
+
+        <a
+          href="/communities"
+          class="text-zinc-300 hover:text-violet-400 transition"
+        >
+          Comunidades
+        </a>
+
+      </div>
+
+      <!-- Login / Usuário -->
+
+      <div class="flex items-center gap-4">
+
+        <% if (typeof user !== 'undefined' && user) { %>
+
+          <span class="text-zinc-400">
+            Olá, <%= user.username %>
+          </span>
+
+          <a
+            href="/logout"
+            class="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 transition"
+          >
+            Sair
+          </a>
+
+        <% } else { %>
+
+          <a
+            href="/login"
+            class="text-zinc-300 hover:text-white transition"
+          >
+            Entrar
+          </a>
+
+          <a
+            href="/register"
+            class="px-4 py-2 rounded-lg bg-violet-600 hover:bg-violet-700 transition"
+          >
+            Criar Conta
+          </a>
+
+        <% } %>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</nav>
