@@ -1,4 +1,4 @@
-const { searchGames } = require("../services/rawgService");
+const { searchGames, getGameById } = require("../services/rawgService");
 
 const renderSearchPage = (req, res) => {
   res.render("games", {
@@ -59,7 +59,33 @@ const searchGame = async (req, res) => {
   }
 };
 
+const gameDetails = async (req, res) => {
+  try {
+
+    const { id } = req.params;
+
+    const game = await getGameById(id);
+
+    const reviews = await Review
+      .find({ gameId: id })
+      .populate("user");
+
+    res.render("gameDetails", {
+      game,
+      reviews
+    });
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Erro");
+  }
+};
+
+const Review = require("../models/Review");
+
 module.exports = {
   renderSearchPage,
-  searchGame
+  searchGame,
+  getGameById,
+  gameDetails
 };

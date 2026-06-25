@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title><%= game.name %></title>
+
+  <link rel="stylesheet" href="/css/output.css">
+
+  <style>
+
+    .star{
+      font-size: 3rem;
+      cursor: pointer;
+      color: #52525b;
+      transition: .2s;
+    }
+
+    .star.active{
+      color: #facc15;
+    }
+
+  </style>
+
+</head>
+
+<body class="bg-zinc-950 text-white min-h-screen flex flex-col">
+    <main class="flex1">
+  <%- include("partials/navBar") %>
+
+  <div class="max-w-7xl mx-auto px-6 py-10">
+
+    <!-- Banner -->
+
+    <img
+      src="<%= game.background_image %>"
+      alt="<%= game.name %>"
+      class="w-full h-[500px] object-cover rounded-3xl"
+    >
+
+    <!-- Dados do jogo -->
+
+    <div class="mt-8">
+
+      <h1 class="text-5xl font-black">
+        <%= game.name %>
+      </h1>
+
+      <div class="flex gap-4 mt-4">
+
+        <span class="bg-violet-600 px-4 py-2 rounded-xl">
+          ⭐ <%= game.rating %>
+        </span>
+
+        <span class="bg-zinc-800 px-4 py-2 rounded-xl">
+          📅 <%= game.released %>
+        </span>
+
+      </div>
+
+      <div class="mt-8 text-zinc-300 leading-relaxed">
+
+        <%- game.description %>
+
+      </div>
+
+    </div>
+
+    <!-- Formulário Review -->
+
+    <div class="mt-12 bg-zinc-900 rounded-2xl p-8">
+
+      <h2 class="text-3xl font-bold mb-6">
+        ⭐ Escrever Review
+      </h2>
+
+      <form action="/reviews/create" method="POST">
+
+        <input
+          type="hidden"
+          name="gameId"
+          value="<%= game.id %>"
+        >
+
+        <input
+          type="hidden"
+          name="gameName"
+          value="<%= game.name %>"
+        >
+
+        <input
+          type="hidden"
+          name="gameImage"
+          value="<%= game.background_image %>"
+        >
+
+        <!-- Avaliação -->
+
+        <label class="block mb-3 text-lg font-semibold">
+          Sua avaliação
+        </label>
+
+        <input
+          type="hidden"
+          name="rating"
+          id="rating"
+          required
+        >
+
+        <div id="stars" class="flex gap-2 mb-8">
+
+          <span data-value="1" class="star">★</span>
+          <span data-value="2" class="star">★</span>
+          <span data-value="3" class="star">★</span>
+          <span data-value="4" class="star">★</span>
+          <span data-value="5" class="star">★</span>
+
+        </div>
+
+        <!-- Comentário -->
+
+        <label class="block mb-3 text-lg font-semibold">
+          Sua opinião
+        </label>
+
+        <textarea
+          name="content"
+          rows="6"
+          required
+          class="w-full bg-zinc-800 rounded-xl p-4 mb-6 border border-zinc-700 focus:border-violet-500 outline-none"
+          placeholder="O que você achou do jogo?"
+        ></textarea>
+
+        <button
+          type="submit"
+          class="bg-violet-600 hover:bg-violet-700 px-8 py-3 rounded-xl transition"
+        >
+          Publicar Review
+        </button>
+
+      </form>
+
+    </div>
+
+    <!-- Reviews -->
+
+    <div class="mt-12">
+
+      <h2 class="text-3xl font-bold mb-6">
+        Reviews da Comunidade
+      </h2>
+
+      <% if (reviews.length === 0) { %>
+
+        <div class="bg-zinc-900 p-6 rounded-xl">
+          Nenhuma review ainda.
+        </div>
+
+      <% } %>
+
+      <% reviews.forEach(review => { %>
+
+        <div class="bg-zinc-900 p-6 rounded-xl mb-4">
+
+          <div class="flex justify-between items-center mb-3">
+
+            <h3 class="font-bold">
+              <%= review.user.username %>
+            </h3>
+
+            <span class="text-yellow-400 text-xl">
+              <%= "★".repeat(review.rating) %>
+            </span>
+
+          </div>
+
+          <p class="text-zinc-300 mb-4">
+            <%= review.content %>
+          </p>
+
+          <% if (
+            user &&
+            review.user._id.toString() === user.id
+          ) { %>
+
+            <div class="flex gap-3">
+
+              <button
+                onclick="openModal('<%= review._id %>', '<%= review.rating %>', '<%= review.content.replace(/'/g, '&#39;') %>')"
+                class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg"
+              >
+                Editar
+              </button>
+
+              <form
+                action="/reviews/delete/<%= review._id %>"
+                method="POST"
+              >
+                <button
+                  class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg"
+                >
+                  Excluir
+                </button>
+              </form>
+
+            </div>
+
+          <% } %>
+
+        </div>
+
+      <% }) %>
+
+    </div>
+
+  </div>
+
+  <!-- Modal -->
+
+  <div
+    id="editModal"
+    class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50"
+  >
+
+    <form
+      id="editForm"
+      method="POST"
+      class="bg-zinc-900 p-8 rounded-2xl w-full max-w-lg"
+    >
+
+      <h2 class="text-2xl font-bold mb-6">
+        Editar Review
+      </h2>
+
+      <label class="block mb-2">
+        Nota
+      </label>
+
+      <input
+        type="number"
+        min="1"
+        max="5"
+        name="rating"
+        id="editRating"
+        class="w-full bg-zinc-800 p-3 rounded-xl mb-4"
+      >
+
+      <label class="block mb-2">
+        Comentário
+      </label>
+
+      <textarea
+        name="content"
+        id="editContent"
+        rows="5"
+        class="w-full bg-zinc-800 p-3 rounded-xl mb-4"
+      ></textarea>
+
+      <div class="flex gap-3">
+
+        <button
+          type="submit"
+          class="bg-violet-600 px-5 py-2 rounded-xl"
+        >
+          Salvar
+        </button>
+
+        <button
+          type="button"
+          onclick="closeModal()"
+          class="bg-zinc-700 px-5 py-2 rounded-xl"
+        >
+          Cancelar
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+</main>
+  <%- include("partials/footer") %>
+
+  <script>
+
+    const stars = document.querySelectorAll(".star");
+    const ratingInput = document.getElementById("rating");
+
+    stars.forEach(star => {
+
+      star.addEventListener("click", () => {
+
+        const rating = Number(star.dataset.value);
+
+        ratingInput.value = rating;
+
+        stars.forEach(s => {
+          s.classList.remove("active");
+        });
+
+        stars.forEach(s => {
+
+          if(Number(s.dataset.value) <= rating){
+            s.classList.add("active");
+          }
+
+        });
+
+      });
+
+    });
+
+    function openModal(id, rating, content){
+
+      document
+        .getElementById("editModal")
+        .classList.remove("hidden");
+
+      document
+        .getElementById("editForm")
+        .action = `/reviews/edit/${id}`;
+
+      document
+        .getElementById("editRating")
+        .value = rating;
+
+      document
+        .getElementById("editContent")
+        .value = content;
+    }
+
+    function closeModal(){
+
+      document
+        .getElementById("editModal")
+        .classList.add("hidden");
+
+    }
+
+  </script>
+
+</body>
+</html>

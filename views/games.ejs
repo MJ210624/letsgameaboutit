@@ -1,69 +1,135 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
+
 <head>
-    <title>Jogos</title>
-    <link rel="stylesheet" href="/css/output.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Jogos | Let's Game About It</title>
+
+  <link rel="stylesheet" href="/css/output.css">
 </head>
 
-<body class="bg-zinc-950 text-white">
+<body class="bg-zinc-950 text-white min-h-screen flex flex-col">
 
-<%- include("partials/navbar") %>
+  <%- include("partials/navBar") %>
 
-<div class="max-w-7xl mx-auto px-6 py-10">
+  <main class="max-w-7xl mx-auto px-6 py-10 flex-1">
 
-    <h1 class="text-5xl font-bold mb-8">
-        🎮 Buscar Jogos
-    </h1>
+    <!-- Título -->
 
-    <form
-        action="/games/search"
-        method="GET"
-        class="mb-10"
-    >
+    <div class="text-center mb-10">
 
-        <input
-            type="text"
-            name="search"
-            placeholder="Digite o nome de um jogo..."
-            class="w-full bg-zinc-900 p-4 rounded-xl border border-zinc-800"
-        >
+      <h1 class="text-5xl font-black">
+        Biblioteca de Jogos
+      </h1>
 
-    </form>
-
-    <div class="grid md:grid-cols-4 gap-6">
-
-        <% games.forEach(game => { %>
-
-            <div
-                class="bg-zinc-900 rounded-2xl overflow-hidden"
-            >
-
-                <img
-                    src="<%= game.background_image %>"
-                    class="w-full h-60 object-cover"
-                >
-
-                <div class="p-4">
-
-                    <h2 class="font-bold text-lg">
-                        <%= game.name %>
-                    </h2>
-
-                    <p class="text-zinc-400 mt-2">
-                        ⭐ <%= game.rating %>
-                    </p>
-
-                </div>
-
-            </div>
-
-        <% }) %>
+      <p class="text-zinc-400 mt-3">
+        Pesquise qualquer jogo e descubra avaliações da comunidade.
+      </p>
 
     </div>
 
-</div>
+    <!-- Busca -->
 
-<%- include("partials/footer") %>
+    <form
+      action="/games/search"
+      method="GET"
+      class="max-w-2xl mx-auto mb-12"
+    >
+
+      <div class="flex gap-3">
+
+        <input
+          type="text"
+          name="search"
+          value="<%= search || '' %>"
+          placeholder="Pesquisar jogo..."
+          class="flex-1 bg-zinc-900 border border-zinc-800 rounded-xl px-5 py-3 focus:outline-none focus:border-violet-500"
+        >
+
+        <button
+          type="submit"
+          class="bg-violet-600 hover:bg-violet-700 px-6 py-3 rounded-xl transition"
+        >
+          Buscar
+        </button>
+
+      </div>
+
+    </form>
+
+    <!-- Nenhum resultado -->
+
+    <% if (search && games.length === 0) { %>
+
+      <div class="text-center text-zinc-400">
+        Nenhum jogo encontrado.
+      </div>
+
+    <% } %>
+
+    <!-- Grid de Jogos -->
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+
+      <% games.forEach(game => { %>
+
+        <a
+          href="/games/<%= game.id %>"
+          class="group"
+        >
+
+          <div
+            class="bg-zinc-900 rounded-2xl overflow-hidden border border-zinc-800 hover:border-violet-500 transition duration-300 hover:scale-105"
+          >
+
+            <!-- Imagem -->
+
+            <img
+              src="<%= game.background_image %>"
+              alt="<%= game.name %>"
+              class="w-full h-60 object-cover"
+            >
+
+            <!-- Conteúdo -->
+
+            <div class="p-5">
+
+              <h2
+                class="font-bold text-lg group-hover:text-violet-400 transition"
+              >
+                <%= game.name %>
+              </h2>
+
+              <div class="mt-3 flex justify-between items-center">
+
+                <span class="text-yellow-400">
+                  ⭐ <%= game.rating %>
+                </span>
+
+                <% if(game.released) { %>
+                  <span class="text-zinc-500 text-sm">
+                    <%= game.released.substring(0,4) %>
+                  </span>
+                <% } %>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </a>
+
+      <% }) %>
+
+    </div>
+
+  </main>
+
+  <%- include("partials/footer") %>
 
 </body>
+
 </html>

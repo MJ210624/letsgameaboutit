@@ -53,13 +53,6 @@
           Reviews
         </a>
 
-        <a
-          href="/communities"
-          class="text-zinc-300 hover:text-violet-400 transition"
-        >
-          Comunidades
-        </a>
-
       </div>
 
       <!-- Login / Usuário -->
@@ -71,7 +64,12 @@
           <span class="text-zinc-400">
             Olá, <%= user.username %>
           </span>
-
+          <a
+            href="/profile"
+            class="text-zinc-300 hover:text-violet-400 transition"
+          >
+            Perfil
+          </a>
           <a
             href="/logout"
             class="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 transition"
@@ -96,7 +94,7 @@
           </a>
 
         <% } %>
-
+          
       </div>
 
     </div>

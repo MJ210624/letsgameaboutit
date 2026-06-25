@@ -4,14 +4,13 @@ const BASE_URL = "https://api.rawg.io/api";
 
 async function searchGames(searchTerm) {
   try {
-
     const response = await axios.get(
       `${BASE_URL}/games`,
       {
         params: {
           key: process.env.RAWG_API_KEY,
           search: searchTerm,
-          page_size: 5
+          page_size: 20
         }
       }
     );
@@ -24,6 +23,27 @@ async function searchGames(searchTerm) {
   }
 }
 
+async function getGameById(id) {
+  try {
+
+    const response = await axios.get(
+      `${BASE_URL}/games/${id}`,
+      {
+        params: {
+          key: process.env.RAWG_API_KEY
+        }
+      }
+    );
+
+    return response.data;
+
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
 module.exports = {
-  searchGames
+  searchGames,
+  getGameById
 };

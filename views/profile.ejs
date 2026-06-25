@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <title>Meu Perfil</title>
+
+  <link rel="stylesheet" href="/css/output.css">
+
+</head>
+
+<body class="bg-zinc-950 text-white min-h-screen flex flex-col">
+
+<%- include("partials/navBar") %>
+<main class="flex-1">
+<div class="max-w-6xl mx-auto px-6 py-12">
+
+  <div class="bg-zinc-900 rounded-3xl p-8 mb-10">
+
+    <div class="flex items-center gap-6">
+
+      <div
+        class="w-24 h-24 rounded-full bg-violet-600 flex items-center justify-center text-4xl"
+      >
+        🎮
+      </div>
+
+      <div>
+
+        <h1 class="text-4xl font-black">
+          <%= user.username %>
+        </h1>
+
+        <div class="flex gap-6 mt-4">
+
+          <span>
+            ⭐ Média: <%= averageRating %>
+          </span>
+
+          <span>
+            📝 Reviews: <%= totalReviews %>
+          </span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <h2 class="text-3xl font-bold mb-6">
+    Minhas Reviews
+  </h2>
+
+  <% if(reviews.length === 0) { %>
+
+    <div class="bg-zinc-900 p-6 rounded-xl">
+
+      Você ainda não publicou reviews.
+
+    </div>
+
+  <% } %>
+
+  <% reviews.forEach(review => { %>
+
+    <div
+      class="bg-zinc-900 p-6 rounded-xl mb-4"
+    >
+
+      <div
+        class="flex justify-between items-center mb-3"
+      >
+
+        <h3 class="font-bold">
+          <%= review.gameName %>
+        </h3>
+
+        <span
+          class="text-yellow-400 text-xl"
+        >
+          <%= "★".repeat(review.rating) %>
+        </span>
+
+      </div>
+
+      <p class="text-zinc-300">
+        <%= review.content %>
+      </p>
+
+    </div>
+
+  <% }) %>
+
+</div>
+</main>
+<%- include("partials/footer") %>
+
+</body>
+</html>
